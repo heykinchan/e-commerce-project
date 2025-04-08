@@ -1,5 +1,5 @@
 
-# Project P03G06
+# E-commerce Project
 
 ## Overview
 
