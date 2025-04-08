@@ -7,16 +7,32 @@ This application is a comprehensive system designed to handle order processing, 
 
 ## System Architecture
 
-The application is split into four core services:
+The system comprises the following core services:
 
-1. **Store**: Manages order creation, payment requests, and delivery requests. Includes both frontend and backend functionalities.
-2. **Bank**: Processes payment transfers.
-3. **DeliveryCo**: Manages the delivery process, including status updates and randomised success/failure handling.
-4. **EmailService**: Sends notifications to customers regarding order and delivery status.
+1. **Store**  
+   Handles order creation, communication with payment and delivery services, and frontend logic.
+   
+2. **Bank**  
+   Processes payment transactions and issues approvals or declines.
 
-Each service has its own database for data integrity and operates independently, with asynchronous communication managed by a customised PostgreSQL-based message queue.
+3. **DeliveryCo**  
+   Simulates the delivery process with randomised success/failure logic and status updates.
+
+4. **EmailService**  
+   Sends email notifications about order and delivery status to customers.
+
+Each service runs independently, owns its own PostgreSQL database, and communicates asynchronously using REST APIs, custom message queues, and SSE.
+
 
 ## Components
+
+| Component       | Port             | Description                              |
+|----------------|------------------|------------------------------------------|
+| Frontend        | `localhost:3000` | React app for placing & tracking orders  |
+| Store Service   | `localhost:8083` | Handles orders, SSE, and inter-service coordination |
+| Bank Service    | `localhost:8084` | Manages transactions and payment status  |
+| DeliveryCo      | `localhost:8085` | Handles delivery simulation and updates  |
+| EmailService    | `localhost:8086` | Sends notification emails to customers   |
 
 1. **Frontend**: A React application running on `localhost:3000` to enable customer interactions, such as placing and monitoring orders.
 2. **Backend Services**:
@@ -31,9 +47,11 @@ These components communicate via RESTful APIs, message queues, and SSE for real-
 
 ### Prerequisites
 
-- Java 17
-- Node.js and npm
+- Java 17+
+- Node.js & npm
 - PostgreSQL
+- IntelliJ (recommended IDE)
+- PgAdmin (recommended DB tool)
 
 ### Installation Steps
 
