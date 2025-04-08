@@ -1,0 +1,102 @@
+### Store - Customer Registration
+POST http://localhost:8083/auth/register
+Content-Type: application/json
+
+{
+  "userId": 0,
+  "username": "customer",
+  "email": "customer@email.com",
+  "password": "COMP5348",
+  "createdAt": ""
+}
+
+### Store - Send Email request
+POST http://localhost:8083/api/store/sendEmail
+Content-Type: application/json
+
+{
+  "fromEmail": "testingFrom",
+  "toEmail": "testingTo",
+  "subject": "testing subject",
+  "body": "json body"
+}
+
+### Store - Request bank to proceed a payment from customer's account to merchant's account
+POST http://localhost:8083/api/store/requestTransfer
+Content-Type: application/json
+
+{
+  "orderID": 5,
+  "amount": 100,
+  "status": "pending"
+}
+
+
+### Bank - Get all the transactions
+GET http://localhost:8082/api/bank/transactions
+
+
+### Bank - Approve a transaction by transaction ID
+PUT http://localhost:8082/api/bank/transaction/approve/5
+
+
+### Bank - Decline a transaction by transaction ID
+PUT http://localhost:8082/api/bank/transaction/decline/1
+
+### Bank - Refund a transaction by order ID
+PUT http://localhost:8082/api/bank/transaction/refund/2
+
+### Store - Create a delivery request to DeliveryCo
+POST http://localhost:8083/api/store/delivery
+Content-Type: application/json
+
+{
+  "orderID": 2,
+  "status": "pending"
+}
+
+
+### DeliveryCo - Get all the delivery request
+GET http://localhost:8084/api/deliveryco/delivery
+
+### DeliveryCo - Confirm receiving the delivery request
+PUT http://localhost:8084/api/deliveryco/delivery/receive/63
+Content-Type: application/x-www-form-urlencoded
+
+
+### DeliveryCo - Confirm pick-up of the delivery request
+PUT http://localhost:8084/api/deliveryco/delivery/collected/63
+Content-Type: application/x-www-form-urlencoded
+
+### DeliveryCo - Confirm the order is being delivered
+PUT http://localhost:8084/api/deliveryco/delivery/delivering/63
+Content-Type: application/x-www-form-urlencoded
+
+### DeliveryCo - Confirm the order has been delivered
+PUT http://localhost:8084/api/deliveryco/delivery/delivered/63
+Content-Type: application/x-www-form-urlencoded
+
+### DelveryCo - Confirm the order delivery is failed
+PUT http://localhost:8084/api/deliveryco/delivery/fail/60
+Content-Type: application/x-www-form-urlencoded
+
+### DeliveryCo - Confirm the order delivery is cancelled
+PUT http://localhost:8084/api/deliveryco/delivery/cancel/62
+Content-Type: application/x-www-form-urlencoded
+
+
+### Store - Cancel an order
+DELETE http://localhost:8083/api/store/order
+Content-Type: application/json
+
+{
+  "orderID": 888,
+  "status": ""
+}
+
+### DeliveryCo - Clear the Database
+DELETE http://localhost:8084/api/deliveryco/clearDB
+
+### Bank - Clear the Database
+DELETE http://localhost:8082/api/bank/clearDB
+
