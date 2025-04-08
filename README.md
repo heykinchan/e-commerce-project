@@ -111,6 +111,7 @@ These components communicate via RESTful APIs, message queues, and SSE for real-
 
 
 - **Order Management**
+  
 | Method | Endpoint                        | Request Body                              | Response                      | Description                           |
 |--------|----------------------------------|-------------------------------------------|-------------------------------|---------------------------------------|
 | POST   | `/order/place`                  | `Order` (productId, quantity, etc.)       | Success or error message      | Places a new order and checks stock  |
@@ -119,6 +120,7 @@ These components communicate via RESTful APIs, message queues, and SSE for real-
 | PUT    | `/order/cancel/{orderId}`       | –                                         | Success or error message      | Cancels unpaid order and restocks    |
 
 - **Store Messaging Queue**
+  
 | Method | Endpoint                        | Request Body                                     | Response             | Description                             |
 |--------|----------------------------------|--------------------------------------------------|----------------------|-----------------------------------------|
 | POST   | `/api/store/sendEmail`          | `EmailDataDTO` (fromEmail, toEmail, subject, body) | `EmailDataDTO`    | Sends email via EmailService           |
@@ -128,6 +130,7 @@ These components communicate via RESTful APIs, message queues, and SSE for real-
 
 
 - **SSE (Server-Sent Events)**
+  
 | Method | Endpoint          | Request Body | Response     | Description                        |
 |--------|-------------------|--------------|--------------|------------------------------------|
 | GET    | `/sse/subscribe`  | –            | SSE stream   | Subscribes to real-time updates    |
@@ -136,6 +139,7 @@ These components communicate via RESTful APIs, message queues, and SSE for real-
 ### Bank API
 
 - **Transaction Management**
+  
 | Method | Endpoint                                      | Request Body | Response                      | Description                        |
 |--------|-----------------------------------------------|--------------|-------------------------------|------------------------------------|
 | GET    | `/api/bank/transactions`                      | –            | List of `TransactionData`     | Gets all transactions              |
@@ -148,6 +152,7 @@ These components communicate via RESTful APIs, message queues, and SSE for real-
 ### DeliveryCo API
 
 - **Delivery Management**
+  
 | Method | Endpoint                                         | Request Body | Response                    | Description                       |
 |--------|--------------------------------------------------|--------------|-----------------------------|------------------------------------|
 | GET    | `/api/deliveryco/delivery`                       | –            | List of `DeliveryData`      | Retrieves all delivery records    |
@@ -162,6 +167,7 @@ These components communicate via RESTful APIs, message queues, and SSE for real-
 ### EmailService API
 
 - **Email Management**
+  
 | Method | Endpoint             | Request Body | Response        | Description                     |
 |--------|----------------------|--------------|-----------------|---------------------------------|
 | DELETE | `/api/email/clearDB` | –            | Success message | Clears all email DB records     |
@@ -170,6 +176,7 @@ These components communicate via RESTful APIs, message queues, and SSE for real-
 ### Authentication API (Store)
 
 - **User Authentication**
+  
 | Method | Endpoint         | Request Body                        | Response                  | Description                     |
 |--------|------------------|-------------------------------------|---------------------------|---------------------------------|
 | POST   | `/auth/register` | `User` (username, password)         | Success or error message  | Registers a new user            |
