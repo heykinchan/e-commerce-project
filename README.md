@@ -34,13 +34,6 @@ Each service runs independently, owns its own PostgreSQL database, and communica
 | DeliveryCo      | `localhost:8085` | Handles delivery simulation and updates  |
 | EmailService    | `localhost:8086` | Sends notification emails to customers   |
 
-1. **Frontend**: A React application running on `localhost:3000` to enable customer interactions, such as placing and monitoring orders.
-2. **Backend Services**:
-   - Store Service (`localhost:8083`)
-   - Bank Service (`localhost:8084`)
-   - DeliveryCo Service (`localhost:8085`)
-   - EmailService (`localhost:8086`)
-
 These components communicate via RESTful APIs, message queues, and SSE for real-time updates.
 
 ## Setup and Installation
