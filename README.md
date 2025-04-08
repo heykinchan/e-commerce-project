@@ -109,144 +109,70 @@ These components communicate via RESTful APIs, message queues, and SSE for real-
 
 ### Store API
 
+
 - **Order Management**
-
-   - `POST /order/place`
-      - Places a new order and checks warehouse stock.
-      - **Request Body:** `Order` object (including product ID, quantity, etc.)
-      - **Response:** Success or error message indicating order status.
-
-   - `GET /order/all`
-      - Fetches a list of all orders.
-      - **Response:** List of `Order` objects.
-
-   - `PUT /order/updateStatus/{orderId}`
-      - Updates the status of a specific order.
-      - **Request Body:** Updated `Order` object (status)
-      - **Path Variable:** `orderId` (Long)
-      - **Response:** Success or error message.
-
-   - `PUT /order/cancel/{orderId}`
-      - Cancels an order if it hasn’t been paid and restores stock levels.
-      - **Path Variable:** `orderId` (Long)
-      - **Response:** Success or error message.
+| Method | Endpoint                        | Request Body                              | Response                      | Description                           |
+|--------|----------------------------------|-------------------------------------------|-------------------------------|---------------------------------------|
+| POST   | `/order/place`                  | `Order` (productId, quantity, etc.)       | Success or error message      | Places a new order and checks stock  |
+| GET    | `/order/all`                    | –                                         | List of `Order` objects       | Fetches all orders                   |
+| PUT    | `/order/updateStatus/{orderId}` | `Order` (status)                          | Success or error message      | Updates the status of an order       |
+| PUT    | `/order/cancel/{orderId}`       | –                                         | Success or error message      | Cancels unpaid order and restocks    |
 
 - **Store Messaging Queue**
+| Method | Endpoint                        | Request Body                                     | Response             | Description                             |
+|--------|----------------------------------|--------------------------------------------------|----------------------|-----------------------------------------|
+| POST   | `/api/store/sendEmail`          | `EmailDataDTO` (fromEmail, toEmail, subject, body) | `EmailDataDTO`    | Sends email via EmailService           |
+| POST   | `/api/store/requestTransfer`    | `TransferRequestDTO` (orderId, amount, status)     | `TransferRequestDTO` | Initiates transfer request to Bank     |
+| POST   | `/api/store/delivery`           | `DeliveryRequestDTO` (orderId, status)            | `DeliveryRequestDTO` | Creates a delivery request             |
+| DELETE | `/api/store/order`              | `DeliveryRequestDTO`                              | `DeliveryRequestDTO` | Cancels order and notifies services    |
 
-   - `POST /api/store/sendEmail`
-      - Sends an email through the EmailService.
-      - **Request Body:** `EmailDataDTO` (fromEmail, toEmail, subject, body)
-      - **Response:** `EmailDataDTO`
-
-   - `POST /api/store/requestTransfer`
-      - Initiates a transfer request to the Bank for an order.
-      - **Request Body:** `TransferRequestDTO` (orderID, amount, status)
-      - **Response:** `TransferRequestDTO`
-
-   - `POST /api/store/delivery`
-      - Creates a delivery request for DeliveryCo.
-      - **Request Body:** `DeliveryRequestDTO` (orderID, status)
-      - **Response:** `DeliveryRequestDTO`
-
-   - `DELETE /api/store/order`
-      - Cancels an order and notifies relevant services.
-      - **Request Body:** `DeliveryRequestDTO`
-      - **Response:** `DeliveryRequestDTO`
 
 - **SSE (Server-Sent Events)**
+| Method | Endpoint          | Request Body | Response     | Description                        |
+|--------|-------------------|--------------|--------------|------------------------------------|
+| GET    | `/sse/subscribe`  | –            | SSE stream   | Subscribes to real-time updates    |
 
-   - `GET /sse/subscribe`
-      - Subscribes to server-sent events for real-time updates on order status changes.
-      - **Response:** SSE stream of notifications.
 
 ### Bank API
 
 - **Transaction Management**
+| Method | Endpoint                                      | Request Body | Response                      | Description                        |
+|--------|-----------------------------------------------|--------------|-------------------------------|------------------------------------|
+| GET    | `/api/bank/transactions`                      | –            | List of `TransactionData`     | Gets all transactions              |
+| PUT    | `/api/bank/transaction/approve/{id}`          | –            | Updated `TransactionData` or 404 | Approves transaction            |
+| PUT    | `/api/bank/transaction/decline/{id}`          | –            | Updated `TransactionData` or 404 | Declines transaction            |
+| PUT    | `/api/bank/transaction/refund/{orderId}`      | –            | Updated `TransactionData` or 404 | Refunds a transaction           |
+| DELETE | `/api/bank/clearDB`                           | –            | Success message               | Clears all Bank DB records         |
 
-   - `GET /api/bank/transactions`
-      - Retrieves all transactions in the database.
-      - **Response:** List of `TransactionData`
-
-   - `PUT /api/bank/transaction/approve/{id}`
-      - Approves a transaction and notifies the Store.
-      - **Path Variable:** `id` (Long)
-      - **Response:** Updated `TransactionData` or 404 if not found.
-
-   - `PUT /api/bank/transaction/decline/{id}`
-      - Declines a transaction and notifies the Store.
-      - **Path Variable:** `id` (Long)
-      - **Response:** Updated `TransactionData` or 404 if not found.
-
-   - `PUT /api/bank/transaction/refund/{orderId}`
-      - Processes a refund for a specific order and notifies the Store.
-      - **Path Variable:** `orderId` (Long)
-      - **Response:** Updated `TransactionData` or 404 if not found.
-
-   - `DELETE /api/bank/clearDB`
-      - Clears all data from the Bank database.
 
 ### DeliveryCo API
 
 - **Delivery Management**
-
-   - `GET /api/deliveryco/delivery`
-      - Retrieves all delivery records.
-      - **Response:** List of `DeliveryData`
-
-   - `PUT /api/deliveryco/delivery/receive/{id}`
-      - Marks a delivery as received and notifies the Store.
-      - **Path Variable:** `id` (Long)
-      - **Response:** Updated `DeliveryData` or 404 if not found.
-
-   - `PUT /api/deliveryco/delivery/collected/{id}`
-      - Marks a delivery as collected and notifies the Store.
-      - **Path Variable:** `id` (Long)
-      - **Response:** Updated `DeliveryData` or 404 if not found.
-
-   - `PUT /api/deliveryco/delivery/delivering/{id}`
-      - Updates a delivery status to "delivering" and notifies the Store.
-      - **Path Variable:** `id` (Long)
-      - **Response:** Updated `DeliveryData` or 404 if not found.
-
-   - `PUT /api/deliveryco/delivery/delivered/{id}`
-      - Marks a delivery as completed and notifies the Store.
-      - **Path Variable:** `id` (Long)
-      - **Response:** Updated `DeliveryData` or 404 if not found.
-
-   - `PUT /api/deliveryco/delivery/fail/{id}`
-      - Marks a delivery as failed and notifies the Store.
-      - **Path Variable:** `id` (Long)
-      - **Response:** Updated `DeliveryData` or 404 if not found.
-
-   - `PUT /api/deliveryco/delivery/cancel/{id}`
-      - Cancels a delivery and notifies the Store.
-      - **Path Variable:** `id` (Long)
-      - **Response:** Updated `DeliveryData` or 404 if not found.
-
-   - `DELETE /api/deliveryco/clearDB`
-      - Clears all data from the DeliveryCo database.
+| Method | Endpoint                                         | Request Body | Response                    | Description                       |
+|--------|--------------------------------------------------|--------------|-----------------------------|------------------------------------|
+| GET    | `/api/deliveryco/delivery`                       | –            | List of `DeliveryData`      | Retrieves all delivery records    |
+| PUT    | `/api/deliveryco/delivery/receive/{id}`          | –            | Updated `DeliveryData` or 404 | Marks as received              |
+| PUT    | `/api/deliveryco/delivery/collected/{id}`        | –            | Updated `DeliveryData` or 404 | Marks as collected             |
+| PUT    | `/api/deliveryco/delivery/delivering/{id}`       | –            | Updated `DeliveryData` or 404 | Marks as delivering            |
+| PUT    | `/api/deliveryco/delivery/delivered/{id}`        | –            | Updated `DeliveryData` or 404 | Marks as delivered             |
+| PUT    | `/api/deliveryco/delivery/fail/{id}`             | –            | Updated `DeliveryData` or 404 | Marks as failed                |
+| PUT    | `/api/deliveryco/delivery/cancel/{id}`           | –            | Updated `DeliveryData` or 404 | Cancels delivery                |
+| DELETE | `/api/deliveryco/clearDB`                        | –            | Success message             | Clears all delivery records       |
 
 ### EmailService API
 
 - **Email Management**
+| Method | Endpoint             | Request Body | Response        | Description                     |
+|--------|----------------------|--------------|-----------------|---------------------------------|
+| DELETE | `/api/email/clearDB` | –            | Success message | Clears all email DB records     |
 
-   - `DELETE /api/email/clearDB`
-      - Clears all data from the EmailService database.
 
 ### Authentication API (Store)
 
 - **User Authentication**
+| Method | Endpoint         | Request Body                        | Response                  | Description                     |
+|--------|------------------|-------------------------------------|---------------------------|---------------------------------|
+| POST   | `/auth/register` | `User` (username, password)         | Success or error message  | Registers a new user            |
+| POST   | `/auth/login`    | `User` (username, password)         | Success or error message  | Logs in a user                  |
+| GET    | `/auth/test`     | –                                   | "Backend is working!"     | Health check endpoint           |
 
-   - `POST /auth/register`
-      - Registers a new user.
-      - **Request Body:** `User` object (username, password)
-      - **Response:** Success or error message.
-
-   - `POST /auth/login`
-      - Logs in a user with username and password.
-      - **Request Body:** `User` object (username, password)
-      - **Response:** Success or error message.
-
-   - `GET /auth/test`
-      - Test endpoint to check if the backend is operational.
-      - **Response:** `"Backend is working!"`
